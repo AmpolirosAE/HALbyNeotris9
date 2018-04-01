@@ -20,7 +20,7 @@ CitizenRecyclinator.Produce_RareMetals = function(producer, amount_produced)
   end
 end
 
-CitizenRecyclinator.Init = function(self)
+function CitizenRecyclinator:GameInit()
   self.progress = 0
 end
 
@@ -38,18 +38,18 @@ CitizenRecyclinator.BuildingUpdate = function(self, dt, ...)
   end
 end
 
-function OnMsg.recycle(recycle)
-    for _, CitizenRecyclinators in ipairs (UICity.labels.CitizenRecyclinators) do
-            for _, colonist in ipairs(CitizenRecyclinators.parent_dome.labels.Colonist or empty_table) do
+function OnMsg.recycle()
+	local recycled=0
+    for _, recycler in ipairs (UICity.labels.CitizenRecyclinator) do
+            for _, colonist in ipairs(recycler.parent_dome.labels.Colonist or empty_table) do
                 if colonist.traits.Adult then 
                     colonist:SetCommand("Die", "recycle") 
-					; 
-                    (self.parent_dome).Recycled_Colonists = (self.parent_dome).Recycled_Colonists + 1 
-					;
+					recycled = recycled+1
                     Msg("CRP", CitizenRecyclinator, 1000)
                 end 
             end
     end
+	return recycled
 end
 
 CitizenRecyclinator.GetRecyclingProgress = function(self)
